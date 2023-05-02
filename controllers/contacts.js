@@ -2,13 +2,7 @@ const { Contact } = require("../models/contact");
 const { HttpError, ctrlWrapper } = require("../helpers");
 
 const getContacts = async (req, res) => {
-  const { _id: owner } = req.user;
-  const { page = 1, limit = 20 } = req.query;
-  const skip = (page - 1) * limit;
-  const result = await Contact.find({ owner }, "-createdAt -updateAt", {
-    skip,
-    limit,
-  }).populate("owner", "email subscription");
+  const result = await Contact.find({}, "-createdAt -updateAt");
   res.status(200).json(result);
 };
 
@@ -22,9 +16,11 @@ const getById = async (req, res) => {
 };
 
 const createContact = async (req, res) => {
-  const { _id: owner } = req.user;
+  const { name, email, phone } = req.body;
   if (!name || !email || !phone) {
-  const result = await Contact.create({ ...req.body, owner });
+    throw HttpError(400, "missing required name field");
+  }
+  const result = await Contact.create(req.body);
   res.status(201).json(result);
 };
 
@@ -65,7 +61,7 @@ const updateStatusContact = async (req, res) => {
     new: true,
   });
   if (!result) {
-    throw HttpError(400, "Not found");
+    throw HttpError(400, "missing field favorite");
   }
   res.status(200).json(result);
 };
