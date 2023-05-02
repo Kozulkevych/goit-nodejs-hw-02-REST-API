@@ -4,7 +4,7 @@ const ctrl = require("../../controllers/auth");
 
 const { authenticate, validateBody, upload } = require("../../middlewares");
 
-const { schemas } = require("../../database/models/user");
+const { schemas } = require("../../models/user");
 const { isValidObjectId } = require("mongoose");
 
 const router = express.Router();

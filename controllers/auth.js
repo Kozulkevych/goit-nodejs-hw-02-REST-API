@@ -6,7 +6,7 @@ const fs = require("fs/promises");
 const Jimp = require("jimp");
 const { nanoid } = require("nanoid");
 
-const { User } = require("../database/models/user");
+const { User } = require("../models/user");
 
 const { HttpError, ctrlWrapper, sendEmail } = require("../helpers");
 
