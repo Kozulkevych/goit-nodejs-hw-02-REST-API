@@ -5,10 +5,20 @@ const ctrl = require("../../controllers/auth");
 const { authenticate, validateBody, upload } = require("../../middlewares");
 
 const { schemas } = require("../../database/models/user");
+const { isValidObjectId } = require("mongoose");
 
 const router = express.Router();
 // signup
 router.post("/register", validateBody(schemas.registerSchema), ctrl.register);
+
+router.get("/auth/verify/:verificationToken", ctrl.verifyEmail);
+
+router.post(
+  "/verify",
+  validateBody(schemas.emailSchema),
+  ctrl.resendVerifyEmail
+);
+
 // signin
 router.post("/login", validateBody(schemas.loginSchema), ctrl.login);
 
