@@ -24,9 +24,6 @@ const contactSchema = new Schema(
       ref: "user",
       required: true,
     },
-    token: {
-      type: String,
-    },
   },
   {
     versionKey: false,
