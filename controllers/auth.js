@@ -12,8 +12,6 @@ const { HttpError, ctrlWrapper, sendEmail } = require("../helpers");
 
 const { SECRET_KEY, BASE_URL } = process.env;
 
-const avatarsDir = path.join(__dirname, "../", "public", "avatars");
-
 const register = async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
@@ -42,7 +40,6 @@ const register = async (req, res) => {
     user: {
       email: newUser.email,
       subscription: newUser.subscription,
-      avatarURL,
     },
   });
 };
@@ -175,5 +172,4 @@ module.exports = {
   getCurrent: ctrlWrapper(getCurrent),
   logout: ctrlWrapper(logout),
   updateSubscription: ctrlWrapper(updateSubscription),
-  updateAvatar: ctrlWrapper(updateAvatar),
 };

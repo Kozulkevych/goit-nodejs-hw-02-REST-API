@@ -2,7 +2,7 @@ const express = require("express");
 
 const ctrl = require("../../controllers/auth");
 
-const { authenticate, validateBody, upload } = require("../../middlewares");
+const { authenticate, validateBody } = require("../../middlewares");
 
 const { schemas } = require("../../models/user");
 const { isValidObjectId } = require("mongoose");
@@ -27,12 +27,5 @@ router.get("/current", authenticate, ctrl.getCurrent);
 router.post("/logout", authenticate, ctrl.logout);
 
 router.patch("/:id/subscription", authenticate, ctrl.updateSubscription);
-
-router.patch(
-  "/avatars",
-  authenticate,
-  upload.single("avatar"),
-  ctrl.updateAvatar
-);
 
 module.exports = router;
