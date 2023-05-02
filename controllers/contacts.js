@@ -23,10 +23,7 @@ const getById = async (req, res) => {
 
 const createContact = async (req, res) => {
   const { _id: owner } = req.user;
-  const { name, email, phone } = req.body;
   if (!name || !email || !phone) {
-    throw HttpError(400, "missing required name field");
-  }
   const result = await Contact.create({ ...req.body, owner });
   res.status(201).json(result);
 };
