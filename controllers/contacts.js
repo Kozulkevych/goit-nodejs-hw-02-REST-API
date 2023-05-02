@@ -9,7 +9,7 @@ const getContacts = async (req, res) => {
     skip,
     limit,
   }).populate("owner", "email subscription");
-  res.json(result);
+  res.status(200).json(result);
 };
 
 const getById = async (req, res) => {
@@ -18,11 +18,15 @@ const getById = async (req, res) => {
   if (!result) {
     throw HttpError(404, "Not found");
   }
-  res.json(result);
+  res.status(200).json(result);
 };
 
 const createContact = async (req, res) => {
   const { _id: owner } = req.user;
+  const { name, email, phone } = req.body;
+  if (!name || !email || !phone) {
+    throw HttpError(400, "missing required name field");
+  }
   const result = await Contact.create({ ...req.body, owner });
   res.status(201).json(result);
 };
@@ -33,31 +37,40 @@ const deleteContact = async (req, res) => {
   if (!result) {
     throw HttpError(404, "Not found");
   }
-  res.json({
-    message: "Delete success",
+  res.status(200).json({
+    message: "contact deleted",
   });
 };
 
 const updateContact = async (req, res) => {
   const { contactId } = req.params;
+  const { name, email, phone } = req.body;
+  if (!name || !email || !phone) {
+    throw HttpError(400, "missing fields");
+  }
   const result = await Contact.findByIdAndUpdate(contactId, req.body, {
     new: true,
   });
   if (!result) {
     throw HttpError(404, "Not found");
   }
-  res.json(result);
+  res.status(200).json(result);
 };
 
 const updateStatusContact = async (req, res) => {
   const { contactId } = req.params;
+  const { favorite } = req.body;
+
+  if (!favorite) {
+    throw HttpError(400, "missing field favorite");
+  }
   const result = await Contact.findByIdAndUpdate(contactId, req.body, {
     new: true,
   });
   if (!result) {
-    throw HttpError(400, "missing field favorite");
+    throw HttpError(400, "Not found");
   }
-  res.json(result);
+  res.status(200).json(result);
 };
 
 module.exports = {

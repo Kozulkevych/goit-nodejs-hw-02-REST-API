@@ -58,7 +58,7 @@ const verifyEmail = async (req, res) => {
     verificationToken: "",
   });
 
-  res.json({
+  res.status(200).json({
     message: "Verification successful",
   });
 };
@@ -81,14 +81,14 @@ const resendVerifyEmail = async (req, res) => {
 
   await sendEmail(verifyEmail);
 
-  res.json({ message: "Verification email sent" });
+  res.status(200).json({ message: "Verification email sent" });
 };
 
 const login = async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
   if (!user) {
-    throw HttpError(401, "Email or password is wrong");
+    throw HttpError(400);
   }
   if (!user.verify) {
     throw HttpError(401, "User not verified");
@@ -100,7 +100,7 @@ const login = async (req, res) => {
   const payload = { contactId: user._id };
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" });
   await User.findByIdAndUpdate(user._id, { token });
-  res.json({
+  res.status(200).json({
     token,
     user: {
       email: user.email,
@@ -111,7 +111,7 @@ const login = async (req, res) => {
 
 const getCurrent = async (req, res) => {
   const { email, subscription } = req.user;
-  res.json({
+  res.status(200).json({
     email,
     subscription,
   });
@@ -138,7 +138,7 @@ const updateSubscription = async (req, res) => {
     { new: true }
   );
 
-  res.json({
+  res.status(200).json({
     user: {
       email: user.email,
       subscription: user.subscription,
@@ -159,7 +159,7 @@ const updateAvatar = async (req, res) => {
   const avatarURL = path.join("avatars", filename);
   await User.findByIdAndUpdate(_id, { avatarURL });
 
-  res.json({
+  res.status(200).json({
     avatarURL,
   });
 };
