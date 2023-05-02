@@ -70,7 +70,6 @@ const updateStatusContact = async (req, res) => {
   if (!result) {
     throw HttpError(400, "Not found");
   }
-  
   res.status(200).json(result);
 };
 
