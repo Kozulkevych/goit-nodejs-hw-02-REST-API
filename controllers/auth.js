@@ -1,7 +1,7 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-const { User } = require("../database/models/user");
+const { User } = require("../models/user");
 
 const { HttpError, ctrlWrapper } = require("../helpers");
 
@@ -27,7 +27,7 @@ const login = async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
   if (!user) {
-    throw HttpError(401, "Email or password is wrong");
+    throw HttpError(400);
   }
   const passwordCompare = await bcrypt.compare(password, user.password);
   if (!passwordCompare) {
@@ -36,7 +36,7 @@ const login = async (req, res) => {
   const payload = { contactId: user._id };
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" });
   await User.findByIdAndUpdate(user._id, { token });
-  res.json({
+  res.status(200).json({
     token,
     user: {
       email: user.email,
@@ -74,7 +74,7 @@ const updateSubscription = async (req, res) => {
     { new: true }
   );
 
-  res.json({
+  res.status(200).json({
     user: {
       email: user.email,
       subscription: user.subscription,
